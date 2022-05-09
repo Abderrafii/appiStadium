@@ -46,6 +46,7 @@ export const responseMiddleware = async (response) => {
 
 export const request = (url, options, requestForLocationHeader) => {
   const access = localStorage.getItem('access');
+  console.log(url);
 
   const accessToken = access ? `Bearer ${access}` : '';
   options.headers = { ...options.headers, Authorization: accessToken };
@@ -60,36 +61,30 @@ export const request = (url, options, requestForLocationHeader) => {
     .then(responseMiddleware)
     .then((res) =>
       res.text().then((e) => {
-        console.log('first', res.status);
         const data = _isEmpty(e) ? {} : JSON.parse(e);
         data.status = res.status;
         return data;
       })
     )
     .catch((e) => {
-      console.log('refresh', e);
       const refresh = localStorage.getItem('refresh');
       const refreshToken = refresh ? `Bearer ${refresh}` : '';
-      console.log('refreshToken', refreshToken);
       return fetch(`${API_URL}/auth/refresh-access`, {
         method: 'POST',
         headers: { Authorization: refreshToken },
       })
         .then((res) =>
           res.json().then((data) => {
-            console.log('data', data.data.access);
-            console.log('if status === 200', res.status);
-            const accessToken = data.data.access ? `Bearer ${data.data.access}` : '';
+            const accessToken = data?.data?.access ? `Bearer ${data?.data?.access}` : '';
             options.headers = {
               ...options.headers,
               Authorization: accessToken,
             };
-            localStorage.setItem('access', data.data.access);
+            localStorage.setItem('access', data?.data?.access);
             return fetch(`${API_URL}/${url}`, options)
               .then(responseMiddleware)
               .then((res) =>
                 res.text().then((e) => {
-                  console.log('', res.status);
                   const data = _isEmpty(e) ? {} : JSON.parse(e);
                   data.status = res.status;
                   return data;
@@ -98,9 +93,9 @@ export const request = (url, options, requestForLocationHeader) => {
           }).catch((e) => console.error('error catch : ', e))
         )
         .catch((e) => {
-          console.log('if status === 401', e);
-          // localStorage.removeItem('access');
-          // localStorage.removeItem('refresh');
+          console.log( e);
+           localStorage.removeItem('access');
+           localStorage.removeItem('refresh');
         });
     });
 };

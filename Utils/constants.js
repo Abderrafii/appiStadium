@@ -1,5 +1,5 @@
  const paths = Object.freeze({
-    HOME: '/',
+    HOME: '/home',
     SIGN_IN: '/authentication/login',
     RESET_PASSWORD: '/authentication/resetPassword',
   });

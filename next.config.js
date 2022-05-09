@@ -5,11 +5,11 @@ const nextConfig = {
   reactStrictMode: true,
   async redirects() {
     return [
-      {
-        source: paths.HOME,
-        destination: '/home',
-        permanent: false,
-      },
+      // {
+      //   source: paths.HOME,
+      //   destination: '/home',
+      //   permanent: false,
+      // },
     ];
   },
 };
