@@ -34,6 +34,18 @@ const MyApp = ({Component, pageProps}) => {
     const items = [
         getItem('Option 1', '1', <PieChartOutlined/>),
         getItem('Option 2', '2', <DesktopOutlined/>),
+        getItem('Namespaces', 'namespaces', <UserOutlined/>, [
+            getItem(
+                'List',
+                'system_users_list',
+                <UnorderedListOutlined/>,
+                null,
+                () => router.push("/users")
+            ),
+            getItem('New', 'system_users_new', <UserAddOutlined/>, null, () => router.push("/users/add")),
+        ], () => {
+            // alert('ok')
+        }),
         getItem('Users', 'system_users', <UserOutlined/>, [
             getItem(
                 'List',
@@ -49,6 +61,7 @@ const MyApp = ({Component, pageProps}) => {
         getItem('Team', 'sub2', <TeamOutlined/>, [getItem('Team 1', '6'), getItem('Team 2', '8')]),
         getItem('Files', '9', <FileOutlined/>),
     ];
+
     return (
         <Layout style={{minHeight: '100vh'}}>
             <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>

@@ -1,6 +1,8 @@
 import {Button, Card, Form, Input, Select} from "antd";
 import {useEffect, useState} from "react";
 import {listNameSpaces} from "../../config/apis";
+import InputAS from "../../components/InputAS";
+import ButtonAS from "../../components/ButtonAS";
 
 const SystemUserAdd = () => {
     const [namespaces, setNamespaces] = useState([]);
@@ -46,6 +48,8 @@ const SystemUserAdd = () => {
                         <Input placeholder="John"/>
                     </Form.Item>
                 </Form.Item>
+                <InputAS formProps={{label: "Email"}} rules={[{required: true}]} name="email" type="email" placeholder="me@example.com"/>
+                <ButtonAS type={"submit"} className={"bg-blue-700"} >Test</ButtonAS>
                 <Form.Item
                     name="email"
                     label="Email"
