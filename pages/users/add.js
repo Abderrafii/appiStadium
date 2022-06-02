@@ -12,6 +12,7 @@ const SystemUserAdd = () => {
                   size={"large"}>
                 <Form.Item label="Full Name" style={{marginBottom: 0}}>
                     <Form.Item
+                    className="bg-red-500"
                         name="firstName"
                         rules={[{required: true}]}
                         style={{display: 'inline-block', width: 'calc(50% - 8px)'}}
