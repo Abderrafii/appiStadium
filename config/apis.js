@@ -10,4 +10,8 @@ export const checkAccessToken = () => {
 
 export const listNameSpaces = () => http(`namespaces`, HTTP_METHODS.GET);
 
+export const getSystemUsers = () => http(`system/users`, HTTP_METHODS.GET);
+
+export const getSystemUserDetails = (id) => http(`system/users/${id}`, HTTP_METHODS.GET);
+
 

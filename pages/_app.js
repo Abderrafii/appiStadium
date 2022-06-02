@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
 
   useEffect(() => {
     // on initial load - run auth check
-    authCheck();
+    //authCheck();
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
