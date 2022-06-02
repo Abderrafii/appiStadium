@@ -1,16 +1,36 @@
-import {Button, Card, DatePicker, Form, Input, InputNumber, Select, Switch} from "antd";
+import {Button, Card, Form, Input, Select} from "antd";
+import {useEffect, useState} from "react";
+import {listNameSpaces} from "../../config/apis";
 
 const SystemUserAdd = () => {
+    const [namespaces, setNamespaces] = useState([]);
+    const onFinish = (values) => {
+        console.log('Success:', values);
+    };
+
+    const onFinishFailed = (errorInfo) => {
+        console.log('Failed:', errorInfo);
+    };
+    useEffect(() => {
+        const getNamespaces = async () => {
+            const response = await listNameSpaces();
+            setNamespaces(response.data);
+        };
+        getNamespaces().catch(console.error);
+    }, []);
+
     return <div>
-        <Card title="Add New User">
+        <Card title="New User">
             <Form labelCol={{span: 4}}
                   wrapperCol={{span: 14}}
                   layout="horizontal"
                   initialValues={{}}
+                  onFinish={onFinish}
+                  onFinishFailed={onFinishFailed}
                   onValuesChange={() => {
                   }}
                   size={"large"}>
-                <Form.Item label="Full Name" style={{marginBottom: 0}}>
+                <Form.Item rules={[{required: true}]} label="Full Name" style={{marginBottom: 0}}>
                     <Form.Item
                     className="bg-red-500"
                         name="firstName"
@@ -20,7 +40,7 @@ const SystemUserAdd = () => {
                         <Input placeholder="Doe"/>
                     </Form.Item>
                     <Form.Item
-                        name="lastName"
+                        name="last_name"
                         rules={[{required: true}]}
                         style={{display: 'inline-block', width: 'calc(50% - 8px)', margin: '0 8px'}}
                     >
@@ -34,18 +54,22 @@ const SystemUserAdd = () => {
                 >
                     <Input placeholder="me@example.com"/>
                 </Form.Item>
-                <Form.Item label="Select">
-                    <Select mode="multiple" allowClear  value={['a10', 'c12']} defaultValue={['a10', 'c12']}>
+                <Form.Item label="Namespaces" name={"namespaces"} rules={[{required: true}]}>
+                    <Select rules={[{required: true}]} mode="multiple" allowClear>
+                        {namespaces.map(namespace => <Select.Option
+                            key={namespace._id} value={namespace._id}>
+                            {namespace.label}
+                        </Select.Option>)}
                     </Select>
                 </Form.Item>
-                <Form.Item label="DatePicker">
-                    <DatePicker/>
-                </Form.Item>
-                <Form.Item label="InputNumber">
-                    <InputNumber/>
-                </Form.Item>
-                <Form.Item label="Switch" valuePropName="checked">
-                    <Switch/>
+
+                <Form.Item label="Role" name={"roles"} rules={[{required: true}]}>
+                    <Select rules={[{required: true}]}>
+                        <Select.Option value="user">User</Select.Option>
+                        <Select.Option value="manager">Manager</Select.Option>
+                        <Select.Option value="admin">Admin</Select.Option>
+                        <Select.Option value="superuser">Superuser</Select.Option>
+                    </Select>
                 </Form.Item>
                 <Button type="primary" htmlType="submit">Submit</Button>
             </Form>
