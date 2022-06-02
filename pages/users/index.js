@@ -84,7 +84,7 @@ const UsersList = ({}) => {
     }, []);
 
     return <div className={""}>
-        {loading ? <Loader/> : <Table dataSource={users} columns={columns}/>};
+        <Table dataSource={users} columns={columns} loading={loading}/>
     </div>
 }
 
