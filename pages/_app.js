@@ -15,6 +15,7 @@ import { authContext, LoadContext } from '../context/myContext';
 import { publicRoutes } from '../routes';
 import { paths } from '../Utils/constants';
 import { useRouter } from 'next/router';
+import SelectAS from '../components/SelectAS';
 
 const { Header, Content, Footer, Sider } = Layout;
 
@@ -63,13 +64,14 @@ const MyApp = ({ Component, pageProps }) => {
   ];
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider 
-        collapsible
+      <Sider
+        className='bg-slate-700 m-2 rounded-2xl  '
+        width={250}
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}>
         {/* <div className="logo"/> */}
         <Menu
-        className='rounded-br-lg rounded-tr-lg'
+          className='rounded-t-2xl bg-slate-700 text-white '
           defaultSelectedKeys={['1']}
           mode='inline'
           items={items}>
@@ -104,15 +106,20 @@ const MyApp = ({ Component, pageProps }) => {
               padding: 24,
               minHeight: 360,
             }}>
+            <SelectAS
+              defaultValue={'system_users_list'}
+              options={[
+                { value: 'lucy', label: 'Lucy (101)' },
+                { value: 'lucy2', label: 'Lucy (102)' },
+                { value: 'lucy3', label: 'Lucy (103)' },
+                { value: 'luc4', label: 'Lucy (104)' },
+                { value: 'lucy5', label: 'Lucy (105' },
+                { value: 'lucy6', label: 'Lucy (106)' },
+              ]}
+            />
             <Component {...pageProps} />
           </div>
         </Content>
-        <Footer
-          style={{
-            textAlign: 'center',
-          }}>
-          Ant Design ©2018 Created by Ant UED
-        </Footer>
       </Layout>
     </Layout>
   );

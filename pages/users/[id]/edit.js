@@ -33,7 +33,7 @@ const SystemUserEdit = () => {
         return <Loader/>
 
     return (
-        <div>
+        <>
             <Card title="Edit User">
                 <Form labelCol={{span: 4}}
                       wrapperCol={{span: 14}}
@@ -81,7 +81,7 @@ const SystemUserEdit = () => {
                     <Button type="primary" htmlType="submit">Submit</Button>
                 </Form>
             </Card>
-        </div>
+        </>
     )
 };
 
