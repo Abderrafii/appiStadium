@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {getSystemUserDetails} from "../../../config/apis";
 import Loader from "../../../components/Loader";
 import {useRouter} from "next/router";
+import {Avatar, Card} from "antd";
 
 const SystemUserDetails = () => {
     const [user, setUser] = useState({});
@@ -32,7 +33,21 @@ const SystemUserDetails = () => {
 
     return (
         <div>
-            {JSON.stringify(user)} {error && <div>Error</div>}
+            <Card title="Details User">
+                <div>
+                    <div><Avatar
+                        size={"large"}
+                        style={{color: '#ffffff', backgroundColor: "dodgerblue"}}>
+                        {user.username[0]}
+                    </Avatar></div>
+                    <div>
+                        <p>Fullname : {user.first_name} {user.last_name}</p>
+                        <p>Username : {user.username}</p>
+                        <p>Email : {user.email}</p>
+                        <p>Role : {user.roles.join(" ")}</p>
+                    </div>
+                </div>
+            </Card>
         </div>
     )
 };

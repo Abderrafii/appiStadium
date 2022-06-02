@@ -42,7 +42,7 @@ const MyApp = ({Component, pageProps}) => {
                 null,
                 () => router.push("/users")
             ),
-            getItem('New', 'system_users_new', <UserAddOutlined/>),
+            getItem('New', 'system_users_new', <UserAddOutlined/>, null, () => router.push("/users/add")),
         ], () => {
             // alert('ok')
         }),
