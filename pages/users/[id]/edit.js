@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {getSystemUserDetails} from "../../../config/apis";
 import Loader from "../../../components/Loader";
 import {useRouter} from "next/router";
-import {Button, DatePicker, Form, Input, InputNumber, Select, Switch, Card} from "antd";
+import {Button, Card, DatePicker, Form, Input, InputNumber, Select, Switch} from "antd";
 
 const SystemUserEdit = () => {
     const [user, setUser] = useState({});
