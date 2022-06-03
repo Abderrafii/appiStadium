@@ -3,6 +3,7 @@ import { getSystemUserDetails } from '../../../config/apis';
 import Loader from '../../../components/Loader';
 import { useRouter } from 'next/router';
 import { Avatar, Card } from 'antd';
+import NamespaceDetails from "../../namespaces/[id]";
 
 const SystemUserDetails = () => {
   const [user, setUser] = useState({});
@@ -11,7 +12,10 @@ const SystemUserDetails = () => {
   const router = useRouter();
   const { id } = router.query;
 
+  console.log(id, user);
+
   useEffect(() => {
+    console.log("useffect");
     const fetchUserData = async (id) => {
       try {
         const response = await getSystemUserDetails(id);
@@ -26,7 +30,7 @@ const SystemUserDetails = () => {
       fetchUserData(id)
         .catch((e) => setError(true))
         .finally(() => setLoading(false));
-  }, [router.query]);
+  }, [id]);
 
 //   if (loading) return <Loader />;
 
@@ -38,16 +42,16 @@ const SystemUserDetails = () => {
             <Avatar
               size={'large'}
               style={{ color: '#ffffff', backgroundColor: 'dodgerblue' }}>
-              {user.username[0]}
+              {}
             </Avatar>
           </div>
           <div>
             <p>
-              Fullname : {user.first_name} {user.last_name}
+              Fullname : {user?.first_name} {user?.last_name}
             </p>
-            <p>Username : {user.username}</p>
-            <p>Email : {user.email}</p>
-            <p>Role : {user.roles.join(' ')}</p>
+            <p>Username : {user?.username}</p>
+            <p>Email : {user?.email}</p>
+            <p>Role : {user?.roles?.join(' ')}</p>
           </div>
         </div>
       </Card>
@@ -56,3 +60,14 @@ const SystemUserDetails = () => {
 };
 
 export default SystemUserDetails;
+
+SystemUserDetails.breadcrumb = [
+  {
+    name: 'Users',
+    url: '/users'
+  },
+  {
+    name: 'Details'
+  }
+];
+

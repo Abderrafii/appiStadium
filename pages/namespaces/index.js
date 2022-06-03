@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
-import {getSystemUsers, listNameSpaces} from "../../config/apis";
-import {Avatar, Button, Table} from "antd";
-import Loader from "../../components/Loader";
+import {listNameSpaces} from "../../config/apis";
+import {Alert, Avatar, Button, Table} from "antd";
 import {EditOutlined, SearchOutlined} from '@ant-design/icons';
 import {useRouter} from "next/router";
 
@@ -47,18 +46,16 @@ const NamespacesList = ({}) => {
         },
     ];
 
-    const getNamespaces = async () => {
-        try {
-            const response = await listNameSpaces();
-            setNamespaces(response.data);
-        } catch (error) {
-            setError(error);
-        }
-    };
-
     useEffect(() => {
         setLoading(true);
-        getNamespaces().catch(error => {
+        listNameSpaces().then(res => {
+            if (res && res.status === 200) {
+                setNamespaces(res.data)
+            } else {
+                setNamespaces([])
+                setError(res.detail)
+            }
+        }).catch(error => {
             setError(error);
         }).finally(() => {
             setLoading(false);
@@ -66,9 +63,24 @@ const NamespacesList = ({}) => {
     }, []);
 
     return <div className={""}>
-         <Table dataSource={namespaces} columns={columns} loading={loading}/>
+        <div className={"mb-4"}>
+            {error && <Alert
+                message="Error"
+                description={error}
+                type="error"
+                closable
+            />}
+        </div>
+        <Table dataSource={namespaces} columns={columns} loading={loading}/>
     </div>
 }
 
 
 export default NamespacesList;
+
+NamespacesList.breadcrumb = [
+    {
+        name: 'Namespaces',
+        url: '/namespaces'
+    }
+];

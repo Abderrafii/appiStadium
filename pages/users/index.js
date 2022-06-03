@@ -1,9 +1,7 @@
 import {useEffect, useState} from "react";
 import {getSystemUsers} from "../../config/apis";
-import {Avatar, Button, Table} from "antd";
-import Link from "next/link";
-import Loader from "../../components/Loader";
-import {SearchOutlined, EditOutlined} from '@ant-design/icons';
+import {Alert, Avatar, Button, Table} from "antd";
+import {EditOutlined, SearchOutlined} from '@ant-design/icons';
 import {useRouter} from "next/router";
 
 const UsersList = ({}) => {
@@ -58,25 +56,26 @@ const UsersList = ({}) => {
             dataIndex: '_id',
             render: (_id) => (
                 <>
-                    <Button icon={<SearchOutlined/>} type="primary" onClick={()=>router.push(`/users/${_id}`)}> Details</Button>
-                    <Button icon={<EditOutlined/>} type="secondary" onClick={()=>router.push(`/users/${_id}/edit`)}> Edit</Button>
+                    <Button icon={<SearchOutlined/>} type="primary"
+                            onClick={() => router.push(`/users/${_id}`)}> Details</Button>
+                    <Button icon={<EditOutlined/>} type="secondary"
+                            onClick={() => router.push(`/users/${_id}/edit`)}> Edit</Button>
                 </>
             ),
         },
     ];
 
-    const getUsers = async () => {
-        try {
-            const response = await getSystemUsers();
-            setUsers(response.data);
-        } catch (error) {
-            setError(error);
-        }
-    };
-
     useEffect(() => {
         setLoading(true);
-        getUsers().catch(error => {
+        getSystemUsers().then(res => {
+            if (res && res.status === 200) {
+                setUsers(res.data);
+            } else {
+                setUsers([]);
+                setError(res.detail);
+            }
+        }).catch(error => {
+            setUsers([]);
             setError(error);
         }).finally(() => {
             setLoading(false);
@@ -84,9 +83,24 @@ const UsersList = ({}) => {
     }, []);
 
     return <div className={""}>
+        <div className={"mb-4"}>
+            {error && <Alert
+                message="Error"
+                description={JSON.stringify(error)}
+                type="error"
+                closable
+            />}
+        </div>
         <Table dataSource={users} columns={columns} loading={loading}/>
     </div>
 }
 
 
 export default UsersList;
+
+UsersList.breadcrumb = [
+    {
+        name: 'Users',
+        url: '/namespaces'
+    }
+];
