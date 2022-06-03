@@ -1,7 +1,6 @@
 import _isEmpty from 'lodash/isEmpty';
 // import { store } from '../config/configureStore';
 
-console.log(process.env.API_URL);
 export const API_URL = process.env.API_URL || 'https://appistadium-dev.herokuapp.com/api/admin';
 
 export const HTTP_METHODS = Object.freeze({
