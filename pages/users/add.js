@@ -7,33 +7,45 @@ const SystemUserAdd = () => {
     const [namespaces, setNamespaces] = useState([]);
     const [values, setValues] = useState({});
     const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState(null);
     const [error, setError] = useState(null);
     const router = useRouter();
     const onFinish = (values) => {
         setLoading(true);
         createSystemUser(values).then(res => {
             if (res.status === 200) {
-                return router.push('/users');
+                setMessage(res.detail);
+                setError(null);
+                setValues({});
+                setTimeout(() => router.push('/users'), 1000);
             } else {
-                return setError(res);
+                setMessage(null);
+                return setError(res.detail);
             }
-        }).catch(err => setError(err)).finally(() => setLoading(false));
+        }).catch(err => {
+            setError(err);
+            setMessage(null);
+        }).finally(() => setLoading(false));
     };
 
     const onFinishFailed = (errorInfo) => {
         console.log('Failed:', errorInfo);
     };
+
     useEffect(() => {
-        const getNamespaces = async () => {
-            const response = await listNameSpaces();
+        listNameSpaces().then(response => {
             if (response.status === 200) {
                 setNamespaces(response.data);
+                setError(null);
             } else {
                 setNamespaces([]);
                 setError(response.detail);
+                setMessage(null);
             }
-        };
-        getNamespaces().catch(console.error);
+        }).catch(e => {
+            setError(e.details);
+            setMessage(null)
+        });
     }, []);
 
     return (<>
@@ -54,6 +66,12 @@ const SystemUserAdd = () => {
                         message="Error"
                         description={JSON.stringify(error)}
                         type="error"
+                        closable
+                    />}
+                    {message && <Alert
+                        message="Info"
+                        description={message}
+                        type="success"
                         closable
                     />}
                 </div>
@@ -118,8 +136,8 @@ const SystemUserAdd = () => {
                         <Select.Option value='superuser'>Superuser</Select.Option>
                     </Select>
                 </Form.Item>
-                <Form.Item label="Actif" name="is_active" valuePropName="checked">
-                    <Switch/>
+                <Form.Item label="Actif" name="is_active" valuePropName="is_active">
+                    <Switch defaultChecked/>
                 </Form.Item>
                 <Button type='primary' htmlType='submit'>
                     Submit

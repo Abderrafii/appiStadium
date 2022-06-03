@@ -14,6 +14,7 @@ export const getNamespaceDetails = (id) => http(`namespaces/${id}`, HTTP_METHODS
 
 export const getSystemUsers = () => http(`system/users`, HTTP_METHODS.GET);
 export const createSystemUser = (data) => http(`system/users`, HTTP_METHODS.POST, {body: data});
+export const updateSystemUser = (id, data) => http(`system/users/${id}`, HTTP_METHODS.PATCH, {body: data});
 
 export const getSystemUserDetails = (id) => http(`system/users/${id}`, HTTP_METHODS.GET);
 

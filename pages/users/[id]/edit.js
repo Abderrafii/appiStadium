@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
-import {getSystemUserDetails, listNameSpaces} from "../../../config/apis";
-import Loader from "../../../components/Loader";
+import {getSystemUserDetails, listNameSpaces, updateSystemUser} from "../../../config/apis";
 import {useRouter} from "next/router";
 import {Alert, Button, Card, Form, Input, Select, Switch} from "antd";
 
@@ -8,13 +7,25 @@ const SystemUserEdit = () => {
     const [user, setUser] = useState({});
     const [namespaces, setNamespaces] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [message, setMessage] = useState(null);
     const [error, setError] = useState(null);
     const router = useRouter();
     const {id} = router.query
 
     const onFinish = values => {
-        console.log('Success:', values);
-
+        updateSystemUser(id, values).then(res => {
+            if (res.status === 200) {
+                setError(null);
+                setMessage(res.detail);
+                setTimeout(() => router.push('/users/' + user._id), 1000);
+            } else {
+                setMessage(null);
+                setError(res.detail);
+            }
+        }).catch(err => {
+            setMessage(null);
+            setError(err.detail ? err.detail : err);
+        })
     }
 
 
@@ -62,6 +73,12 @@ const SystemUserEdit = () => {
                             type="error"
                             closable
                         />}
+                        {message && <Alert
+                            message="Message"
+                            description={message}
+                            type="success"
+                            closable
+                        />}
                     </div>
                     <Form.Item
                         rules={[{required: true}]}
@@ -89,23 +106,18 @@ const SystemUserEdit = () => {
                     <Form.Item name='phone' label='Phone' rules={[{required: true}]}>
                         <Input placeholder='060467648'/>
                     </Form.Item>
-                    <Form.Item name='email' label='Email' rules={[{required: true}]}>
-                        <Input placeholder='me@example.com'/>
-                    </Form.Item>
                     <Form.Item name='pseudo' label='Pseudo' rules={[{required: true}]}>
                         <Input placeholder='me@example.com'/>
                     </Form.Item>
                     <Form.Item name='bio' label='Bio'>
                         <Input.TextArea defaultValue={"N/A"}/>
                     </Form.Item>
-                    <Form.Item name='username' label='Username' rules={[{required: true}]}>
-                        <Input placeholder='me@example.com'/>
-                    </Form.Item>
                     <Form.Item
                         label='Namespaces'
                         name={'namespaces'}
                         rules={[{required: true}]}>
-                        <Select rules={[{required: true}]} mode='multiple' allowClear value={user?.namespaces?.map(n=>n._id)}>
+                        <Select rules={[{required: true}]} mode='multiple' allowClear
+                                value={user?.namespaces?.map(n => n._id)}>
                             {namespaces.map((namespace) => (
                                 <Select.Option key={namespace._id} value={namespace._id}>
                                     {namespace.label}
@@ -114,7 +126,7 @@ const SystemUserEdit = () => {
                         </Select>
                     </Form.Item>
                     <Form.Item label='Role' name={'roles'} rules={[{required: true}]}>
-                        <Select rules={[{required: true}]}>
+                        <Select rules={[{required: true}]} mode={"multiple"} value={user.roles}>
                             <Select.Option value='user'>User</Select.Option>
                             <Select.Option value='manager'>Manager</Select.Option>
                             <Select.Option value='admin'>Admin</Select.Option>
