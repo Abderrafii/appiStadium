@@ -1,4 +1,3 @@
-import _isEmpty from 'lodash/isEmpty';
 // import { store } from '../config/configureStore';
 
 export const API_URL = process.env.API_URL || 'https://appistadium-dev.herokuapp.com/api/admin';
@@ -42,66 +41,51 @@ export const responseMiddleware = async (response) => {
     return Promise.reject(error);
 };
 
-export const request = (url, options, requestForLocationHeader) => {
+export const request = async (url, options, requestForLocationHeader) => {
     const access = localStorage.getItem('access');
-    console.log(url);
-
+    const refresh = localStorage.getItem('refresh');
     const accessToken = access ? `Bearer ${access}` : '';
+    const refreshToken = refresh ? `Bearer ${refresh}` : '';
     options.headers = {...options.headers, Authorization: accessToken};
-
-    if (requestForLocationHeader)
-        return fetch(`${API_URL}/${url}`, options)
-            .then(responseMiddleware)
-            .then((res) => res.headers.get('location'))
-            .catch((e) => console.error('error request 1 : ', e));
-
-    return fetch(`${API_URL}/${url}`, options)
-        .then(responseMiddleware)
-        .then((res) =>
-            res.text().then((e) => {
-                const data = _isEmpty(e) ? {} : JSON.parse(e);
-                data.status = res.status;
-                return data;
-            })
-        )
-        .catch((e) => {
-            if (e.response && e.response.status !== 401) {
-                console.log('error request 2 : ', e.response);
-                const data = e.response;
-                data.status = e?.status;
-                return data;
-            }
-            const refresh = localStorage.getItem('refresh');
-            const refreshToken = refresh ? `Bearer ${refresh}` : '';
-            return fetch(`${API_URL}/auth/refresh-access`, {
-                method: 'POST',
-                headers: {Authorization: refreshToken},
-            })
-                .then((res) =>
-                    res.json().then((data) => {
-                        const accessToken = data?.data?.access ? `Bearer ${data?.data?.access}` : '';
-                        options.headers = {
-                            ...options.headers,
-                            Authorization: accessToken,
-                        };
-                        localStorage.setItem('access', data?.data?.access);
-                        return fetch(`${API_URL}/${url}`, options)
-                            .then(responseMiddleware)
-                            .then((res) =>
-                                res.text().then((e) => {
-                                    const data = _isEmpty(e) ? {} : JSON.parse(e);
-                                    data.status = res.status;
-                                    return data;
-                                })
-                            );
-                    }).catch((e) => console.error('error catch : ', e))
-                )
-                .catch((e) => {
-                    console.log(e);
-                    localStorage.removeItem('access');
-                    localStorage.removeItem('refresh');
-                });
-        });
+    try {
+        if (requestForLocationHeader) {
+            const res = await fetch(`${API_URL}/${url}`, options)
+            return res.headers.get('Location');
+        }
+        let res = await fetch(`${API_URL}/${url}`, options)
+        if (res.status !== 401) {
+            const data = await res.json();
+            data.status = res.status
+            return data;
+        }
+        res = await fetch(`${API_URL}/auth/refresh-access`, {
+            method: 'POST',
+            headers: {Authorization: refreshToken}
+        })
+        let data = await res.json()
+        const newAccess = data?.data?.access
+        options.headers = {
+            ...options.headers,
+            Authorization: newAccess ? `Bearer ${newAccess}` : '',
+        };
+        res = await fetch(`${API_URL}/${url}`, options)
+        if (res.status !== 401) {
+            localStorage.setItem('access', newAccess)
+            data = await res.json();
+            data.status = res.status
+            return data
+        }
+        localStorage.removeItem('access');
+        localStorage.removeItem('refresh');
+        localStorage.removeItem('userData');
+        data = await res.json();
+        data.status = res?.status;
+        return data;
+    } catch (e) {
+        const data = e.response;
+        data.status = e?.status;
+        return data;
+    }
 };
 
 export const requestForBlob = (url, options) =>

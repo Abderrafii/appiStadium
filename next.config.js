@@ -2,10 +2,13 @@ const {paths} = require('./Utils/constants');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    env: {
-        API_URL: 'https://appistadium-dev.herokuapp.com/api/admin',
-    },
     reactStrictMode: false,
+    env: {
+        API_URL: process.env.API_URL || "https://appistadium-dev.herokuapp.com/api/admin",
+    },
+    publicRuntimeConfig: {
+        API_URL: process.env.API_URL || "https://appistadium-dev.herokuapp.com/api/admin",
+    },
     async redirects() {
         return [
             // {
