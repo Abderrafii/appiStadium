@@ -6,7 +6,7 @@ import {authContext} from '../context/myContext';
 import {publicRoutes} from '../routes';
 import {paths} from '../Utils/constants';
 import {useRouter} from 'next/router';
-import SideBarAS from "../components/SideBarAS";
+import AdminSideBarAS from "../components/SideBarAS/admin";
 
 const {Header, Content} = Layout;
 
@@ -14,7 +14,7 @@ const MyApp = ({Component, pageProps}) => {
     const bread = Component.breadcrumb ? Component.breadcrumb : [];
     return (
         <Layout style={{minHeight: '100vh'}}>
-            <SideBarAS/>
+            <AdminSideBarAS/>
             <Layout className='site-layout'>
                 <Header className='site-layout-background' style={{padding: 0}}/>
                 <Content style={{margin: '0 16px',}}>

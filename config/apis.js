@@ -8,7 +8,8 @@ export const checkAccessToken = () => {
     return http(`auth/check-access`, HTTP_METHODS.POST);
 };
 
-export const listNameSpaces = () => http(`namespaces`, HTTP_METHODS.GET);
+export const listNameSpaces = () => http(`namespaces/all`, HTTP_METHODS.GET);
+export const listAccessibleNameSpaces = () => http(`namespaces`, HTTP_METHODS.GET);
 export const createNameSpace = (data) => http(`namespaces`, HTTP_METHODS.POST,  {
     headers: { ...CONTENT_TYPE.FORM_DATA },
     body: data,

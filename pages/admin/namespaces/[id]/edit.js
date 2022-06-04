@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
 import {editNameSpace, getNamespaceDetails, getSystemUsers} from "../../../../config/apis";
-import Loader from "../../../../components/Loader";
 import {useRouter} from "next/router";
 import {Alert, Button, Card, Form, Input, Select, Switch, Upload} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
@@ -9,8 +8,7 @@ import {navigate, paths} from "../../../../Utils/constants";
 
 const NamespaceEdit = () => {
     const [namespace, setNamespace] = useState({});
-    const [values, setValues] = useState({});
-    const [users, setUsers] = useState({});
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [message, setMessage] = useState(null);
@@ -42,7 +40,7 @@ const NamespaceEdit = () => {
                     setUsers(res.data);
                     setError(null);
                 } else {
-                    setUsers({});
+                    setUsers([]);
                     setError(res.detail);
                 }
             }).catch(e => {
@@ -51,17 +49,15 @@ const NamespaceEdit = () => {
             }).finally(() => setLoading(false));
     }, [router.query]);
 
-    if (loading)
-        return <Loader/>
-
     function onFinish(values) {
+        setLoading(true);
         const data = valuesToFormData(values);
         editNameSpace(id, data).then(res => {
             if (res.status === 200) {
                 setMessage(res.detail);
                 setError(null);
-                setValues({});
-                setTimeout(() =>navigate(router, paths.VIEW_NAMESPACE, {id:namespace._id}), 1000);
+                setNamespace({});
+                return navigate(router, paths.VIEW_NAMESPACE, {id: namespace._id})
             } else {
                 setMessage(null);
                 return setError(res.detail);
@@ -74,7 +70,7 @@ const NamespaceEdit = () => {
 
     return (
         <>
-            <Card title="Edit Namespace">
+            <Card title="Edit Namespace" loading={loading}>
                 <Form
                     labelCol={{span: 4}}
                     wrapperCol={{span: 14}}
@@ -82,7 +78,7 @@ const NamespaceEdit = () => {
                     initialValues={namespace}
                     onFinish={onFinish}
                     onValuesChange={(value) => {
-                        setValues({...values, ...value});
+                        setNamespace({...namespace, ...value});
                     }}
                     size={'large'}>
                     <div className={"mb-4"}>
@@ -161,19 +157,21 @@ const NamespaceEdit = () => {
                         <Input.TextArea/>
                     </Form.Item>
                     <Form.Item getValueFromEvent={getFile} name='logo' label='Logo'>
-                        <Upload   beforeUpload={()=> {
+                        <Upload beforeUpload={() => {
                             return false
                         }} multiple={false}>
                             <Button icon={<UploadOutlined/>}>Select File</Button>
                         </Upload>
                     </Form.Item>
                     <Form.Item getValueFromEvent={getFile} name='banner' label='Banner'>
-                        <Upload   beforeUpload={()=> {return false}}>
+                        <Upload beforeUpload={() => {
+                            return false
+                        }}>
                             <Button icon={<UploadOutlined/>}>Select File</Button>
                         </Upload>
                     </Form.Item>
-                    <Form.Item label="Actif" name="is_active">
-                        <Switch />
+                    <Form.Item label="Actif" name="is_active" valuePropName={"is_active"}>
+                        <Switch defaultChecked={namespace.is_active} checked={namespace.is_active}/>
                     </Form.Item>
                     <Button type='primary' htmlType='submit'>
                         Submit

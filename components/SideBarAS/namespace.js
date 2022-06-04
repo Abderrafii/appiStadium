@@ -1,14 +1,6 @@
 import React, {useState} from "react";
 import {useRouter} from "next/router";
-import {
-    AppstoreOutlined,
-    DesktopOutlined,
-    PieChartOutlined,
-    PlusSquareOutlined,
-    TeamOutlined,
-    UnorderedListOutlined,
-    UserOutlined
-} from "@ant-design/icons";
+import {AppstoreOutlined, PlusSquareOutlined, UnorderedListOutlined, UserOutlined} from "@ant-design/icons";
 import {Layout, Menu} from "antd";
 import {navigate, paths} from "../../Utils/constants";
 
@@ -22,33 +14,31 @@ function getItem(label, key, icon, children, cb = null) {
     };
 }
 
-const SideBarAS = () => {
+const NamespaceSideBarAS = () => {
     const [collapsed, setCollapsed] = useState(false);
     const router = useRouter();
 
     const items = [
-        getItem('Option 1', '1', <PieChartOutlined/>),
-        getItem('Option 2', '2', <DesktopOutlined/>),
         getItem(
-            'Users',
-            'system_users',
+            'Trivia',
+            'trivia',
             <UserOutlined/>,
             [
-                getItem(
-                    'List',
-                    'system_users_list',
-                    <UnorderedListOutlined/>,
-                    null,
-                    () => navigate(router, paths.LIST_SYSTEM_USERS)
-                ),
-                getItem('New', 'system_users_new', <PlusSquareOutlined/>, null, () =>
-                    navigate(router, paths.ADD_SYSTEM_USER)
-                ),
+                getItem('Categories', 'cats', <AppstoreOutlined/>,
+                    [
+                        getItem('List', 'cats_list', <UnorderedListOutlined/>, null, () =>{}),
+                        getItem('New', 'cats_new', <PlusSquareOutlined/>, null, () =>{}),
+                    ]),
+                getItem('Questions', 'questions', <AppstoreOutlined/>,
+                    [
+                        getItem('List', 'cats_list', <UnorderedListOutlined/>, null, () =>{}),
+                        getItem('New', 'cats_new', <PlusSquareOutlined/>, null, () =>{}),
+                    ]),
             ],
         ),
 
         getItem(
-            'Namespaces',
+            'AppiGames',
             'namespaces',
             <AppstoreOutlined/>,
             [
@@ -77,13 +67,9 @@ const SideBarAS = () => {
                 defaultSelectedKeys={['1']}
                 mode='inline'
                 items={items}>
-                <Menu.Item>
-                    <TeamOutlined/>
-                    <span>Users</span>
-                </Menu.Item>
             </Menu>
         </Layout.Sider>
     );
 };
 
-export default SideBarAS;
+export default NamespaceSideBarAS;
