@@ -2,6 +2,7 @@ import {Alert, Button, Card, Form, Input, Select, Switch} from 'antd';
 import {useEffect, useState} from 'react';
 import {createSystemUser, listNameSpaces} from '../../../config/apis';
 import {useRouter} from "next/router";
+import {navigate, paths} from "../../../Utils/constants";
 
 const SystemUserAdd = () => {
     const [namespaces, setNamespaces] = useState([]);
@@ -17,7 +18,7 @@ const SystemUserAdd = () => {
                 setMessage(res.detail);
                 setError(null);
                 setValues({});
-                setTimeout(() => router.push('/users'), 1000);
+                setTimeout(() => navigate(router, paths.LIST_NAMESPACES), 1000);
             } else {
                 setMessage(null);
                 return setError(res.detail);

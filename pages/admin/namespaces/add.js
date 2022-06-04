@@ -3,6 +3,7 @@ import {useEffect, useState} from 'react';
 import {useRouter} from "next/router";
 import {createNameSpace, getSystemUsers} from "../../../config/apis";
 import {UploadOutlined} from '@ant-design/icons';
+import {navigate, paths} from "../../../Utils/constants";
 
 export const valuesToFormData = (values) => {
     const data = new FormData();
@@ -57,7 +58,7 @@ const NamespaceAdd = () => {
                 setMessage(res.detail);
                 setError(null);
                 setValues({});
-                setTimeout(() => router.push('/namespaces'), 1000);
+                setTimeout(() => navigate(router, paths.LIST_NAMESPACES), 1000);
             } else {
                 setMessage(null);
                 return setError(res.detail);

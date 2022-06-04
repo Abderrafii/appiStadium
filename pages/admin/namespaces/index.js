@@ -3,6 +3,7 @@ import {listNameSpaces} from "../../../config/apis";
 import {Alert, Avatar, Button, Table} from "antd";
 import {EditOutlined, SearchOutlined} from '@ant-design/icons';
 import {useRouter} from "next/router";
+import {navigate, paths} from "../../../Utils/constants";
 
 const NamespacesList = ({}) => {
     const [namespaces, setNamespaces] = useState([]);
@@ -38,9 +39,9 @@ const NamespacesList = ({}) => {
             render: (_id) => (
                 <>
                     <Button icon={<SearchOutlined/>} type="primary"
-                            onClick={() => router.push(`/namespaces/${_id}`)}> Details</Button>
+                            onClick={() => navigate(router, paths.VIEW_NAMESPACE, {id:_id})}> Details</Button>
                     <Button icon={<EditOutlined/>} type="secondary"
-                            onClick={() => router.push(`/namespaces/${_id}/edit`)}> Edit</Button>
+                            onClick={() => navigate(router, paths.EDIT_NAMESPACE, {id:_id})}> Edit</Button>
                 </>
             ),
         },

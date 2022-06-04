@@ -3,6 +3,7 @@ import {getSystemUsers} from "../../../config/apis";
 import {Alert, Avatar, Button, Table} from "antd";
 import {EditOutlined, SearchOutlined} from '@ant-design/icons';
 import {useRouter} from "next/router";
+import {navigate, paths} from "../../../Utils/constants";
 
 const UsersList = ({}) => {
     const [users, setUsers] = useState([]);
@@ -57,9 +58,9 @@ const UsersList = ({}) => {
             render: (_id) => (
                 <>
                     <Button icon={<SearchOutlined/>} type="primary"
-                            onClick={() => router.push(`/users/${_id}`)}> Details</Button>
+                            onClick={() => navigate(router, paths.VIEW_SYSTEM_USER, {id:_id})}> Details</Button>
                     <Button icon={<EditOutlined/>} type="secondary"
-                            onClick={() => router.push(`/users/${_id}/edit`)}> Edit</Button>
+                            onClick={() => navigate(router, paths.EDIT_SYSTEM_USER, {id:_id})}> Edit</Button>
                 </>
             ),
         },

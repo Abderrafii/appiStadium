@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {getSystemUserDetails, listNameSpaces, updateSystemUser} from "../../../../config/apis";
 import {useRouter} from "next/router";
 import {Alert, Button, Card, Form, Input, Select, Switch} from "antd";
+import {navigate, paths} from "../../../../Utils/constants";
 
 const SystemUserEdit = () => {
     const [user, setUser] = useState({});
@@ -17,7 +18,7 @@ const SystemUserEdit = () => {
             if (res.status === 200) {
                 setError(null);
                 setMessage(res.detail);
-                setTimeout(() => router.push('/users/' + user._id), 1000);
+                setTimeout(() => navigate(router, paths.VIEW_SYSTEM_USER, {id:user._id}), 1000);
             } else {
                 setMessage(null);
                 setError(res.detail);

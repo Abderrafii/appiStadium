@@ -9,7 +9,8 @@ import {
     UnorderedListOutlined,
     UserOutlined
 } from "@ant-design/icons";
-import {Menu, Layout} from "antd";
+import {Layout, Menu} from "antd";
+import {navigate, paths} from "../../Utils/constants";
 
 function getItem(label, key, icon, children, cb = null) {
     return {
@@ -38,10 +39,10 @@ const SideBarAS = () => {
                     'system_users_list',
                     <UnorderedListOutlined/>,
                     null,
-                    () => router.push('/admin/users')
+                    () => navigate(router, paths.LIST_SYSTEM_USERS)
                 ),
                 getItem('New', 'system_users_new', <PlusSquareOutlined/>, null, () =>
-                    router.push('/admin//users/add')
+                    navigate(router, paths.ADD_SYSTEM_USER)
                 ),
             ],
         ),
@@ -56,10 +57,10 @@ const SideBarAS = () => {
                     'ns_list',
                     <UnorderedListOutlined/>,
                     null,
-                    () => router.push('/admin/namespaces')
+                    () => navigate(router, paths.LIST_NAMESPACES)
                 ),
                 getItem('New', 'ns_new', <PlusSquareOutlined/>, null, () =>
-                    router.push('/admin/namespaces/add')
+                    navigate(router, paths.ADD_NAMESPACE)
                 ),
             ],
         ),

@@ -5,6 +5,7 @@ import {useRouter} from "next/router";
 import {Alert, Button, Card, Form, Input, Select, Switch, Upload} from "antd";
 import {UploadOutlined} from "@ant-design/icons";
 import {valuesToFormData} from "../add";
+import {navigate, paths} from "../../../../Utils/constants";
 
 const NamespaceEdit = () => {
     const [namespace, setNamespace] = useState({});
@@ -60,7 +61,7 @@ const NamespaceEdit = () => {
                 setMessage(res.detail);
                 setError(null);
                 setValues({});
-                setTimeout(() => router.push(`/namespaces/${namespace._id}`), 1000);
+                setTimeout(() =>navigate(router, paths.VIEW_NAMESPACE, {id:namespace._id}), 1000);
             } else {
                 setMessage(null);
                 return setError(res.detail);

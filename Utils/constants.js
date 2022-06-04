@@ -7,9 +7,10 @@ const paths = Object.freeze({
 
     ADD_NAMESPACE: '/admin/namespace/add',
     LIST_NAMESPACES: '/admin/namespaces',
-    EDIT_NAMESPACE: '/admin/namespace/#{id}/edit',
-    VIEW_NAMESPACE: '/admin/namespace/#{id}',
-    DELETE_NAMESPACE: '/admin/namespace/#{id}',
+    EDIT_NAMESPACE: '/admin/namespaces/#{id}/edit',
+    VIEW_NAMESPACE: '/admin/namespaces/#{id}',
+    DELETE_NAMESPACE: '/admin/namespaces/#{id}',
+
     // CRUD USER
     ADD_SYSTEM_USER: '/admin/users/add',
     LIST_SYSTEM_USERS: '/admin/users',
@@ -19,9 +20,12 @@ const paths = Object.freeze({
 
 });
 
-const redirect = (router, path, params) => {
+const navigate = (router, path, params = {}) => {
+    console.log(path);
     Object.keys(params).forEach(k => {
-        path = path.replace(`#${k}`, params[k]);
+        console.log(k, params[k], path);
+        path = path.replace(`#{${k}}`, params[k]);
+        console.log(path)
     })
     router.push(path)
 }
@@ -29,4 +33,4 @@ const redirect = (router, path, params) => {
 
 //   module.exports = paths;
 
-module.exports = {paths};
+module.exports = {paths, navigate};
