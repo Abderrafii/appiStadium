@@ -1,20 +1,48 @@
-import {useEffect, useState} from "react";
-import {editNameSpace, getNamespaceDetails, getSystemUsers} from "../../../config/apis";
-import Loader from "../../../components/Loader";
+import {Alert, Button, Card, Form, Input, Select, Switch, Upload} from 'antd';
+import {useEffect, useState} from 'react';
 import {useRouter} from "next/router";
-import {Alert, Button, Card, Form, Input, Select, Switch, Upload} from "antd";
-import {UploadOutlined} from "@ant-design/icons";
-import {valuesToFormData} from "../add";
+import {createNameSpace, getSystemUsers} from "../../../config/apis";
+import {UploadOutlined} from '@ant-design/icons';
 
-const NamespaceEdit = () => {
-    const [namespace, setNamespace] = useState({});
-    const [values, setValues] = useState({});
-    const [users, setUsers] = useState({});
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+export const valuesToFormData = (values) => {
+    const data = new FormData();
+    data.append('owner', values.owner);
+    data.append('is_active', values.is_active);
+    data.append('label', values.label);
+    data.append('description', values.description);
+    data.append('email', values.email);
+    data.append('defaultLanguage', values.defaultLanguage);
+    data.append('languages', values.languages);
+    data.append('system_users', values.system_users);
+    data.append('telephone', values.phone);
+    data.append('logo', values.logo);
+    data.append('banner', values.banner);
+    return data;
+}
+
+const NamespaceAdd = () => {
+    const [values, setValues] = useState({is_active: true});
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState(null);
+    const [error, setError] = useState(null);
     const router = useRouter();
-    const {id} = router.query
+
+    useEffect(() => {
+        getSystemUsers().then(response => {
+            if (response.status === 200) {
+                setUsers(response.data);
+                setError(null);
+            } else {
+                setUsers([]);
+                setError(response.detail);
+                setMessage(null);
+            }
+        }).catch(e => {
+            setError(e.details);
+            setMessage(null)
+        });
+    }, []);
 
     const getFile = (e) => {
         const f = e.file;
@@ -22,45 +50,14 @@ const NamespaceEdit = () => {
         return f
     };
 
-
-    useEffect(() => {
-        setLoading(true);
-        if (id)
-            getNamespaceDetails(id).then(res => {
-                if (res.status === 200) {
-                    res.data.defaultLanguage = res.data.languages.default
-                    res.data.languages = res.data.languages.available
-                    setNamespace(res.data);
-                    setError(null);
-                } else {
-                    setNamespace({});
-                    setError(res.detail);
-                }
-            }).then(getSystemUsers).then(res => {
-                if (res.status === 200) {
-                    setUsers(res.data);
-                    setError(null);
-                } else {
-                    setUsers({});
-                    setError(res.detail);
-                }
-            }).catch(e => {
-                setError(e)
-                setMessage(null)
-            }).finally(() => setLoading(false));
-    }, [router.query]);
-
-    if (loading)
-        return <Loader/>
-
     function onFinish(values) {
         const data = valuesToFormData(values);
-        editNameSpace(id, data).then(res => {
+        createNameSpace(data).then(res => {
             if (res.status === 200) {
                 setMessage(res.detail);
                 setError(null);
                 setValues({});
-                setTimeout(() => router.push(`/namespaces/${namespace._id}`), 1000);
+                setTimeout(() => router.push('/namespaces'), 1000);
             } else {
                 setMessage(null);
                 return setError(res.detail);
@@ -71,14 +68,13 @@ const NamespaceEdit = () => {
         })
     }
 
-    return (
-        <>
-            <Card title="Edit Namespace">
+    return (<>
+            <Card title='New Namespace' loading={loading}>
                 <Form
                     labelCol={{span: 4}}
                     wrapperCol={{span: 14}}
                     layout='horizontal'
-                    initialValues={namespace}
+                    initialValues={values}
                     onFinish={onFinish}
                     onValuesChange={(value) => {
                         setValues({...values, ...value});
@@ -98,31 +94,26 @@ const NamespaceEdit = () => {
                             closable
                         />}
                     </div>
-                    <Form.Item
-                        rules={[{required: true}]}
-                        label='Label'
-                        style={{marginBottom: 0}}>
-                        <Form.Item className='bg-red-500' name='label' rules={[{required: true}]}>
-                            <Input placeholder='Label'/>
-                        </Form.Item>
+                    <Form.Item rules={[{required: true}]} name={"label"} label='Label'>
+                        <Input placeholder='Label'/>
                     </Form.Item>
-                    <Form.Item name='description' label='Description' rules={[{required: true}]}>
+                    <Form.Item name='description' label='Description'>
                         <Input.TextArea/>
                     </Form.Item>
-                    <Form.Item name='phone' label='Phone' rules={[{required: true}]}>
+                    <Form.Item name='phone' label='Phone'>
                         <Input placeholder='060467648'/>
                     </Form.Item>
                     <Form.Item name='email' label='Email' rules={[{required: true}]}>
                         <Input placeholder='me@example.com'/>
                     </Form.Item>
-                    <Form.Item name={"languages"} label='Languages'>
-                        <Select rules={[{required: true}]} mode={"multiple"}>
+                    <Form.Item name={"languages"} label='Languages' rules={[{required: true}]}>
+                        <Select mode={"multiple"}>
                             <Select.Option value='fr'>Français</Select.Option>
                             <Select.Option value='en'>Anglais</Select.Option>
                             <Select.Option value='es'>Espagnole</Select.Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name={"defaultLanguage"} label='Default Languages'>
+                    <Form.Item name={"defaultLanguage"} label='Default Languages' rules={[{required: true}]}>
                         <Select rules={[{required: true}]}>
                             <Select.Option value='fr'>Français</Select.Option>
                             <Select.Option value='en'>Anglais</Select.Option>
@@ -143,9 +134,8 @@ const NamespaceEdit = () => {
                     </Form.Item>
                     <Form.Item
                         label='Users'
-                        name={'system_users'}
-                        rules={[{required: true}]}>
-                        <Select rules={[{required: true}]} mode={"multiple"} allowClear>
+                        name={'system_users'}>
+                        <Select mode={"multiple"} allowClear>
                             {users.map((user) => (
                                 <Select.Option key={user._id} value={user._id}>
                                     {user.first_name} {user.last_name}
@@ -160,19 +150,21 @@ const NamespaceEdit = () => {
                         <Input.TextArea/>
                     </Form.Item>
                     <Form.Item getValueFromEvent={getFile} name='logo' label='Logo'>
-                        <Upload   beforeUpload={()=> {
+                        <Upload beforeUpload={() => {
                             return false
                         }} multiple={false}>
                             <Button icon={<UploadOutlined/>}>Select File</Button>
                         </Upload>
                     </Form.Item>
                     <Form.Item getValueFromEvent={getFile} name='banner' label='Banner'>
-                        <Upload   beforeUpload={()=> {return false}}>
+                        <Upload beforeUpload={() => {
+                            return false
+                        }}>
                             <Button icon={<UploadOutlined/>}>Select File</Button>
                         </Upload>
                     </Form.Item>
                     <Form.Item label="Actif" name="is_active">
-                        <Switch />
+                        <Switch/>
                     </Form.Item>
                     <Button type='primary' htmlType='submit'>
                         Submit
@@ -180,7 +172,7 @@ const NamespaceEdit = () => {
                 </Form>
             </Card>
         </>
-    )
+    );
 };
 
-export default NamespaceEdit
+export default NamespaceAdd;

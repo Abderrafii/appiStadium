@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {getSystemUserDetails, listNameSpaces, updateSystemUser} from "../../../config/apis";
+import {getSystemUserDetails, listNameSpaces, updateSystemUser} from "../../../../config/apis";
 import {useRouter} from "next/router";
 import {Alert, Button, Card, Form, Input, Select, Switch} from "antd";
 

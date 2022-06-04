@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {getSystemUsers} from "../../config/apis";
+import {getSystemUsers} from "../../../config/apis";
 import {Alert, Avatar, Button, Table} from "antd";
 import {EditOutlined, SearchOutlined} from '@ant-design/icons';
 import {useRouter} from "next/router";

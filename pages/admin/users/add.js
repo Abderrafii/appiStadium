@@ -1,6 +1,6 @@
 import {Alert, Button, Card, Form, Input, Select, Switch} from 'antd';
 import {useEffect, useState} from 'react';
-import {createSystemUser, listNameSpaces} from '../../config/apis';
+import {createSystemUser, listNameSpaces} from '../../../config/apis';
 import {useRouter} from "next/router";
 
 const SystemUserAdd = () => {

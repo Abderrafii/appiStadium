@@ -7,9 +7,10 @@ import InputAS from "../../../components/InputAS";
 import {authContext} from "../../../context/myContext";
 import {userAuthentication} from "../../../config/apis";
 import {paths} from "../../../Utils/constants";
-import {Form} from "antd";
+import {Form, Layout} from "antd";
 import Link from "next/link";
 import Loader from "../../../components/Loader";
+import SelectNamespace from "../../select";
 
 const body = {
     username: "string",
@@ -33,7 +34,7 @@ const Login = () => {
                 localStorage.setItem("refresh", res.data.authToken.refresh);
                 setUser(res.data.user);
                 setIsLoading(true)
-                router.push(paths.HOME);
+                router.push(paths.AFTER_SIGN_IN);
             })
             .catch(() => {
                 setMessage("error authentication");
@@ -116,5 +117,13 @@ const Login = () => {
         </div>
     );
 };
+
+Login.getLayout = function getLayout(Component, pageProps) {
+    return (
+        <Layout>
+            {<Component {...pageProps} />}
+        </Layout>
+    )
+}
 
 export default Login;

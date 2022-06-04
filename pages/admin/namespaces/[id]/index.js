@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {getNamespaceDetails} from '../../../config/apis';
+import {getNamespaceDetails} from '../../../../config/apis';
 import {useRouter} from 'next/router';
 import {Card} from 'antd';
 

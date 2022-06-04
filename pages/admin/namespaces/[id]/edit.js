@@ -1,48 +1,20 @@
-import {Alert, Button, Card, Form, Input, Select, Switch, Upload} from 'antd';
-import {useEffect, useState} from 'react';
+import {useEffect, useState} from "react";
+import {editNameSpace, getNamespaceDetails, getSystemUsers} from "../../../../config/apis";
+import Loader from "../../../../components/Loader";
 import {useRouter} from "next/router";
-import {createNameSpace, getSystemUsers} from "../../config/apis";
-import {UploadOutlined} from '@ant-design/icons';
+import {Alert, Button, Card, Form, Input, Select, Switch, Upload} from "antd";
+import {UploadOutlined} from "@ant-design/icons";
+import {valuesToFormData} from "../add";
 
-export const valuesToFormData = (values) => {
-    const data = new FormData();
-    data.append('owner', values.owner);
-    data.append('is_active', values.is_active);
-    data.append('label', values.label);
-    data.append('description', values.description);
-    data.append('email', values.email);
-    data.append('defaultLanguage', values.defaultLanguage);
-    data.append('languages', values.languages);
-    data.append('system_users', values.system_users);
-    data.append('telephone', values.phone);
-    data.append('logo', values.logo);
-    data.append('banner', values.banner);
-    return data;
-}
-
-const NamespaceAdd = () => {
+const NamespaceEdit = () => {
+    const [namespace, setNamespace] = useState({});
     const [values, setValues] = useState({});
-    const [users, setUsers] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [message, setMessage] = useState(null);
+    const [users, setUsers] = useState({});
+    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [message, setMessage] = useState(null);
     const router = useRouter();
-
-    useEffect(() => {
-        getSystemUsers().then(response => {
-            if (response.status === 200) {
-                setUsers(response.data);
-                setError(null);
-            } else {
-                setUsers([]);
-                setError(response.detail);
-                setMessage(null);
-            }
-        }).catch(e => {
-            setError(e.details);
-            setMessage(null)
-        });
-    }, []);
+    const {id} = router.query
 
     const getFile = (e) => {
         const f = e.file;
@@ -50,14 +22,45 @@ const NamespaceAdd = () => {
         return f
     };
 
+
+    useEffect(() => {
+        setLoading(true);
+        if (id)
+            getNamespaceDetails(id).then(res => {
+                if (res.status === 200) {
+                    res.data.defaultLanguage = res.data.languages.default
+                    res.data.languages = res.data.languages.available
+                    setNamespace(res.data);
+                    setError(null);
+                } else {
+                    setNamespace({});
+                    setError(res.detail);
+                }
+            }).then(getSystemUsers).then(res => {
+                if (res.status === 200) {
+                    setUsers(res.data);
+                    setError(null);
+                } else {
+                    setUsers({});
+                    setError(res.detail);
+                }
+            }).catch(e => {
+                setError(e)
+                setMessage(null)
+            }).finally(() => setLoading(false));
+    }, [router.query]);
+
+    if (loading)
+        return <Loader/>
+
     function onFinish(values) {
         const data = valuesToFormData(values);
-        createNameSpace(data).then(res => {
+        editNameSpace(id, data).then(res => {
             if (res.status === 200) {
                 setMessage(res.detail);
                 setError(null);
                 setValues({});
-                setTimeout(() => router.push('/namespaces'), 1000);
+                setTimeout(() => router.push(`/namespaces/${namespace._id}`), 1000);
             } else {
                 setMessage(null);
                 return setError(res.detail);
@@ -68,13 +71,14 @@ const NamespaceAdd = () => {
         })
     }
 
-    return (<>
-            <Card title='New Namespace' loading={loading}>
+    return (
+        <>
+            <Card title="Edit Namespace">
                 <Form
                     labelCol={{span: 4}}
                     wrapperCol={{span: 14}}
                     layout='horizontal'
-                    initialValues={values}
+                    initialValues={namespace}
                     onFinish={onFinish}
                     onValuesChange={(value) => {
                         setValues({...values, ...value});
@@ -102,10 +106,10 @@ const NamespaceAdd = () => {
                             <Input placeholder='Label'/>
                         </Form.Item>
                     </Form.Item>
-                    <Form.Item name='description' label='Description' rules={[{required: true}]}>
+                    <Form.Item name='description' label='Description'>
                         <Input.TextArea/>
                     </Form.Item>
-                    <Form.Item name='phone' label='Phone' rules={[{required: true}]}>
+                    <Form.Item name='phone' label='Phone'>
                         <Input placeholder='060467648'/>
                     </Form.Item>
                     <Form.Item name='email' label='Email' rules={[{required: true}]}>
@@ -176,7 +180,7 @@ const NamespaceAdd = () => {
                 </Form>
             </Card>
         </>
-    );
+    )
 };
 
-export default NamespaceAdd;
+export default NamespaceEdit

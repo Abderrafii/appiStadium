@@ -1,5 +1,5 @@
 import {useEffect, useState} from 'react';
-import {deleteSystemUser, getSystemUserDetails} from '../../../config/apis';
+import {deleteSystemUser, getSystemUserDetails} from '../../../../config/apis';
 import {useRouter} from 'next/router';
 import {Avatar, Button, Card, Popconfirm} from 'antd';
 import {QuestionCircleOutlined} from "@ant-design/icons";
