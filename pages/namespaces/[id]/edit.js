@@ -3,8 +3,8 @@ import {editNameSpace, getNamespaceDetails, getSystemUsers} from "../../../confi
 import Loader from "../../../components/Loader";
 import {useRouter} from "next/router";
 import {Alert, Button, Card, Form, Input, Select, Switch, Upload} from "antd";
-import {valuesToFormData} from "../_utils";
 import {UploadOutlined} from "@ant-design/icons";
+import {valuesToFormData} from "../add";
 
 const NamespaceEdit = () => {
     const [namespace, setNamespace] = useState({});
