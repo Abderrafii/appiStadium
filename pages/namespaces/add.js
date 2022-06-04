@@ -1,7 +1,9 @@
-import {Alert, Button, Card, Form, Input, Select, Switch} from 'antd';
+import {Alert, Button, Card, Form, Input, Select, Switch, Upload} from 'antd';
 import {useEffect, useState} from 'react';
 import {useRouter} from "next/router";
 import {createNameSpace, getSystemUsers} from "../../config/apis";
+import {UploadOutlined} from '@ant-design/icons';
+import {valuesToFormData} from "./_utils";
 
 const NamespaceAdd = () => {
     const [values, setValues] = useState({});
@@ -27,8 +29,15 @@ const NamespaceAdd = () => {
         });
     }, []);
 
-    function onFinish() {
-        createNameSpace(values).then(res => {
+    const getFile = (e) => {
+        const f = e.file;
+        f.filename = f.name;
+        return f
+    };
+
+    function onFinish(values) {
+        const data = valuesToFormData(values);
+        createNameSpace(data).then(res => {
             if (res.status === 200) {
                 setMessage(res.detail);
                 setError(null);
@@ -131,8 +140,20 @@ const NamespaceAdd = () => {
                     <Form.Item name='privacyPolicy' label='Privacy Policy'>
                         <Input.TextArea/>
                     </Form.Item>
-                    <Form.Item label="Actif" name="is_active" valuePropName="is_active">
-                        <Switch defaultChecked/>
+                    <Form.Item getValueFromEvent={getFile} name='logo' label='Logo'>
+                        <Upload   beforeUpload={()=> {
+                            return false
+                        }} multiple={false}>
+                            <Button icon={<UploadOutlined/>}>Select File</Button>
+                        </Upload>
+                    </Form.Item>
+                    <Form.Item getValueFromEvent={getFile} name='banner' label='Banner'>
+                        <Upload   beforeUpload={()=> {return false}}>
+                            <Button icon={<UploadOutlined/>}>Select File</Button>
+                        </Upload>
+                    </Form.Item>
+                    <Form.Item label="Actif" name="is_active">
+                        <Switch />
                     </Form.Item>
                     <Button type='primary' htmlType='submit'>
                         Submit

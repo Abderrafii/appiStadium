@@ -2,7 +2,9 @@ import {useEffect, useState} from "react";
 import {editNameSpace, getNamespaceDetails, getSystemUsers} from "../../../config/apis";
 import Loader from "../../../components/Loader";
 import {useRouter} from "next/router";
-import {Alert, Button, Card, Form, Input, Select, Switch} from "antd";
+import {Alert, Button, Card, Form, Input, Select, Switch, Upload} from "antd";
+import {valuesToFormData} from "../_utils";
+import {UploadOutlined} from "@ant-design/icons";
 
 const NamespaceEdit = () => {
     const [namespace, setNamespace] = useState({});
@@ -14,12 +16,20 @@ const NamespaceEdit = () => {
     const router = useRouter();
     const {id} = router.query
 
+    const getFile = (e) => {
+        const f = e.file;
+        f.filename = f.name;
+        return f
+    };
+
 
     useEffect(() => {
         setLoading(true);
         if (id)
             getNamespaceDetails(id).then(res => {
                 if (res.status === 200) {
+                    res.data.defaultLanguage = res.data.languages.default
+                    res.data.languages = res.data.languages.available
                     setNamespace(res.data);
                     setError(null);
                 } else {
@@ -44,10 +54,8 @@ const NamespaceEdit = () => {
         return <Loader/>
 
     function onFinish(values) {
-        const languages = values.languages
-        values.languages = languages?.available.join(',')
-        values.defaultLanguage = languages?.default
-        editNameSpace(id, values).then(res => {
+        const data = valuesToFormData(values);
+        editNameSpace(id, data).then(res => {
             if (res.status === 200) {
                 setMessage(res.detail);
                 setError(null);
@@ -107,14 +115,14 @@ const NamespaceEdit = () => {
                     <Form.Item name='email' label='Email' rules={[{required: true}]}>
                         <Input placeholder='me@example.com'/>
                     </Form.Item>
-                    <Form.Item name={["languages", "available"]}  label='Languages'>
+                    <Form.Item name={"languages"} label='Languages'>
                         <Select rules={[{required: true}]} mode={"multiple"}>
                             <Select.Option value='fr'>Français</Select.Option>
                             <Select.Option value='en'>Anglais</Select.Option>
                             <Select.Option value='es'>Espagnole</Select.Option>
                         </Select>
                     </Form.Item>
-                    <Form.Item name={["languages", "default"]} label='Default Languages'>
+                    <Form.Item name={"defaultLanguage"} label='Default Languages'>
                         <Select rules={[{required: true}]}>
                             <Select.Option value='fr'>Français</Select.Option>
                             <Select.Option value='en'>Anglais</Select.Option>
@@ -151,8 +159,20 @@ const NamespaceEdit = () => {
                     <Form.Item name='privacyPolicy' label='Privacy Policy'>
                         <Input.TextArea/>
                     </Form.Item>
-                    <Form.Item label="Actif" name="is_active" valuePropName="is_active">
-                        <Switch defaultChecked/>
+                    <Form.Item getValueFromEvent={getFile} name='logo' label='Logo'>
+                        <Upload   beforeUpload={()=> {
+                            return false
+                        }} multiple={false}>
+                            <Button icon={<UploadOutlined/>}>Select File</Button>
+                        </Upload>
+                    </Form.Item>
+                    <Form.Item getValueFromEvent={getFile} name='banner' label='Banner'>
+                        <Upload   beforeUpload={()=> {return false}}>
+                            <Button icon={<UploadOutlined/>}>Select File</Button>
+                        </Upload>
+                    </Form.Item>
+                    <Form.Item label="Actif" name="is_active">
+                        <Switch />
                     </Form.Item>
                     <Button type='primary' htmlType='submit'>
                         Submit

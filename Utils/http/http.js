@@ -113,5 +113,6 @@ export const http = (
         },
         requestForLocationHeader,
     ];
+    console.log('params : ', params, sendBlob, data);
     return (receiveBlob ? requestForBlob : request)(...params);
 };
