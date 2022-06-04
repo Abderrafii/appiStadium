@@ -54,7 +54,7 @@ const SystemUserEdit = () => {
 
     return (
         <>
-            <Card title='New User' loading={loading}>
+            <Card title='Edit User' loading={loading}>
                 <Form
                     labelCol={{span: 4}}
                     wrapperCol={{span: 14}}

@@ -1,5 +1,5 @@
-import 'antd/dist/antd.css';
 import '../styles/globals.css';
+import 'antd/dist/antd.css';
 import React, {useEffect, useState} from 'react';
 import {Breadcrumb, Layout, Menu} from 'antd';
 import {
