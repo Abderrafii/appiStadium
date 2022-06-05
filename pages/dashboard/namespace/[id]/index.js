@@ -1,4 +1,4 @@
-import NamespaceApp from "../../_app";
+import NamespaceApp from "../../layout";
 import {Layout} from "antd";
 
 const NamespaceDashboard = () => {
