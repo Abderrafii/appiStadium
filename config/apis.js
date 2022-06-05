@@ -31,3 +31,11 @@ export const getTriviaCategoryDetails = (namespaceId, id) => http(`namespaces/${
 export const createTriviaCategory = (namespaceId, data) => http(`namespaces/${namespaceId}/quizzes/categories`, HTTP_METHODS.POST, {body: data});
 export const updateTriviaCategory = (namespaceId, id, data) => http(`namespaces/${namespaceId}/quizzes/categories/${id}`, HTTP_METHODS.PATCH, {body: data});
 export const deleteTriviaCategory = (namespaceId, id) => http(`namespaces/${namespaceId}/quizzes/categories/${id}`, HTTP_METHODS.DELETE);
+
+export const getTriviaCategoryQuestions = (namespaceId, categoryId) => http(`namespaces/${namespaceId}/quizzes/categories/${categoryId}/questions`, HTTP_METHODS.GET);
+export const getTriviaQuestions = (namespaceId) => http(`namespaces/${namespaceId}/quizzes/questions`, HTTP_METHODS.GET);
+export const getTriviaQuestionDetails = (namespaceId, id) => http(`namespaces/${namespaceId}/quizzes/questions/${id}`, HTTP_METHODS.GET);
+export const createTriviaQuestion = (namespaceId, data) => http(`namespaces/${namespaceId}/quizzes/questions`, HTTP_METHODS.POST, {body: data});
+export const updateTriviaQuestion = (namespaceId, id, data) => http(`namespaces/${namespaceId}/quizzes/questions/${id}`, HTTP_METHODS.PATCH, {body: data});
+export const deleteTriviaQuestion = (namespaceId, id) => http(`namespaces/${namespaceId}/quizzes/questions/${id}`, HTTP_METHODS.DELETE);
+
