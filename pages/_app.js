@@ -7,6 +7,7 @@ import {publicRoutes} from '../routes';
 import {paths} from '../Utils/constants';
 import {useRouter} from 'next/router';
 import AdminSideBarAS from "../components/SideBarAS/admin";
+import NamespaceApp from "../components/layouts/namespace";
 
 const {Header, Content} = Layout;
 
@@ -63,6 +64,14 @@ export default function App({Component, pageProps}) {
             {Component.getLayout(Component, pageProps)}
         </authContext.Provider>
 
+    }
+
+    if (router.query.hasOwnProperty('namespaceId')) {
+        return (
+            <Layout>
+                {<NamespaceApp Component={Component} pageProps={pageProps}/>}
+            </Layout>
+        );
     }
     return (
         <authContext.Provider value={{user, setUser}}>

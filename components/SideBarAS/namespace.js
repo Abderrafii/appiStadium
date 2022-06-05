@@ -17,7 +17,8 @@ function getItem(label, key, icon, children, cb = null) {
 const NamespaceSideBarAS = () => {
     const [collapsed, setCollapsed] = useState(false);
     const router = useRouter();
-
+    const {namespaceId} = router.query;
+    console.log(namespaceId, "namespaceId");
     const items = [
         getItem(
             'Trivia',
@@ -26,13 +27,14 @@ const NamespaceSideBarAS = () => {
             [
                 getItem('Categories', 'cats', <AppstoreOutlined/>,
                     [
-                        getItem('List', 'cats_list', <UnorderedListOutlined/>, null, () =>{}),
-                        getItem('New', 'cats_new', <PlusSquareOutlined/>, null, () =>{}),
+                        getItem('List', 'cats_list', <UnorderedListOutlined/>, null, () =>navigate(router, paths.NAMESPACE_TRIVIA_LIST_CATEGORIES, {namespaceId})),
+                        getItem('New', 'cats_new', <PlusSquareOutlined/>, null, () =>navigate(router, paths.NAMESPACE_TRIVIA_ADD_CATEGORIES, {namespaceId})),
                     ]),
                 getItem('Questions', 'questions', <AppstoreOutlined/>,
                     [
-                        getItem('List', 'cats_list', <UnorderedListOutlined/>, null, () =>{}),
-                        getItem('New', 'cats_new', <PlusSquareOutlined/>, null, () =>{}),
+                        getItem('List', 'questions_list', <UnorderedListOutlined/>, null, () =>navigate(router, paths.NAMESPACE_TRIVIA_LIST_QUESTIONS, {namespaceId})),
+                        getItem('New', 'questions_add', <PlusSquareOutlined/>, null, () =>navigate(router, paths.NAMESPACE_TRIVIA_ADD_QUESTIONS, {namespaceId})),
+                        getItem('Import', 'questions_import', <PlusSquareOutlined/>, null, () =>navigate(router, paths.NAMESPACE_TRIVIA_ADD_QUESTIONS, {namespaceId})),
                     ]),
             ],
         ),

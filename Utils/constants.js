@@ -23,22 +23,19 @@ const paths = Object.freeze({
     NAMESPACE_DASHBOARD: '/dashboard/namespace/',
 
     // Trivia
-    NAMESPACE_TRIVIA_LIST_CATEGORIES: '/dashboard/namespace/{namespaceId}/trivia/categories',
-    NAMESPACE_TRIVIA_ADD_CATEGORIES: '/dashboard/namespace/{namespaceId}/trivia/categories/add',
-    NAMESPACE_TRIVIA_EDIT_CATEGORIES: '/dashboard/namespace/{namespaceId}/trivia/categories/#{id}/edit',
-    NAMESPACE_TRIVIA_VIEW_CATEGORIES: '/dashboard/namespace/{namespaceId}/trivia/categories/#{id}/view',
-    NAMESPACE_TRIVIA_LIST_QUESTIONS: '/dashboard/namespace/{namespaceId}/trivia/questions',
-    NAMESPACE_TRIVIA_ADD_QUESTIONS: '/dashboard/namespace/{namespaceId}/trivia/questions/add',
-    NAMESPACE_TRIVIA_EDIT_QUESTIONS: '/dashboard/namespace/{namespaceId}/trivia/questions/#{id}/edit',
-    NAMESPACE_TRIVIA_VIEW_QUESTIONS: '/dashboard/namespace/{namespaceId}/trivia/questions/#{id}/view',
+    NAMESPACE_TRIVIA_LIST_CATEGORIES: '/dashboard/namespace/#{namespaceId}/trivia/categories',
+    NAMESPACE_TRIVIA_ADD_CATEGORIES: '/dashboard/namespace/#{namespaceId}/trivia/categories/add',
+    NAMESPACE_TRIVIA_EDIT_CATEGORIES: '/dashboard/namespace/#{namespaceId}/trivia/categories/#{id}/edit',
+    NAMESPACE_TRIVIA_VIEW_CATEGORIES: '/dashboard/namespace/#{namespaceId}/trivia/categories/#{id}',
+    NAMESPACE_TRIVIA_LIST_QUESTIONS: '/dashboard/namespace/#{namespaceId}/trivia/questions',
+    NAMESPACE_TRIVIA_ADD_QUESTIONS: '/dashboard/namespace/#{namespaceId}/trivia/questions/add',
+    NAMESPACE_TRIVIA_EDIT_QUESTIONS: '/dashboard/namespace/#{namespaceId}/trivia/questions/#{id}/edit',
+    NAMESPACE_TRIVIA_VIEW_QUESTIONS: '/dashboard/namespace/#{namespaceId}/trivia/questions/#{id}',
 });
 
 const navigate = (router, path, params = {}) => {
-    console.log(path);
     Object.keys(params).forEach(k => {
-        console.log(k, params[k], path);
         path = path.replace(`#{${k}}`, params[k]);
-        console.log(path)
     })
     router.push(path)
 }

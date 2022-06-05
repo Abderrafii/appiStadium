@@ -10,21 +10,24 @@ export const checkAccessToken = () => {
 
 export const listNameSpaces = () => http(`namespaces/all`, HTTP_METHODS.GET);
 export const listAccessibleNameSpaces = () => http(`namespaces`, HTTP_METHODS.GET);
-export const createNameSpace = (data) => http(`namespaces`, HTTP_METHODS.POST,  {
-    headers: { ...CONTENT_TYPE.FORM_DATA },
+export const createNameSpace = (data) => http(`namespaces`, HTTP_METHODS.POST, {
+    headers: {...CONTENT_TYPE.FORM_DATA},
     body: data,
-},true);
+}, true);
 export const editNameSpace = (id, data) => http(`namespaces/${id}`, HTTP_METHODS.PATCH, {
-    headers: { ...CONTENT_TYPE.FORM_DATA },
+    headers: {...CONTENT_TYPE.FORM_DATA},
     body: data,
-},true);
+}, true);
 export const getNamespaceDetails = (id) => http(`namespaces/${id}`, HTTP_METHODS.GET);
 
 export const getSystemUsers = () => http(`system/users`, HTTP_METHODS.GET);
 export const createSystemUser = (data) => http(`system/users`, HTTP_METHODS.POST, {body: data});
 export const updateSystemUser = (id, data) => http(`system/users/${id}`, HTTP_METHODS.PATCH, {body: data});
 export const deleteSystemUser = (id) => http(`system/users/${id}`, HTTP_METHODS.DELETE);
-
 export const getSystemUserDetails = (id) => http(`system/users/${id}`, HTTP_METHODS.GET);
 
-
+export const getTriviaCategories = (namespaceId) => http(`namespaces/${namespaceId}/quizzes/categories`, HTTP_METHODS.GET);
+export const getTriviaCategoryDetails = (namespaceId, id) => http(`namespaces/${namespaceId}/quizzes/categories/${id}`, HTTP_METHODS.GET);
+export const createTriviaCategory = (namespaceId, data) => http(`namespaces/${namespaceId}/quizzes/categories`, HTTP_METHODS.POST, {body: data});
+export const updateTriviaCategory = (namespaceId, id, data) => http(`namespaces/${namespaceId}/quizzes/categories/${id}`, HTTP_METHODS.PATCH, {body: data});
+export const deleteTriviaCategory = (namespaceId, id) => http(`namespaces/${namespaceId}/quizzes/categories/${id}`, HTTP_METHODS.DELETE);
