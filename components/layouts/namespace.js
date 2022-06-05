@@ -1,12 +1,11 @@
 import 'antd/dist/antd.css';
-import React, {useState} from 'react';
-import {Breadcrumb, Layout} from 'antd';
-import {authContext} from '../../context/myContext';
-import NamespaceSideBarAS from "../../components/SideBarAS/namespace";
+import React from 'react';
+import {Layout} from 'antd';
+import NamespaceSideBarAS from "../SideBarAS/namespace";
 
 const {Header, Content} = Layout;
 
-const DashboardApp = ({Component, pageProps}) => {
+const NamespaceApp = ({Component, pageProps}) => {
     return (
         <Layout style={{minHeight: '100vh'}}>
             <NamespaceSideBarAS/>
@@ -22,11 +21,4 @@ const DashboardApp = ({Component, pageProps}) => {
     );
 };
 
-export default function NamespaceApp({Component, pageProps}) {
-    const [user, setUser] = useState(null);
-    return (
-        <authContext.Provider value={{user, setUser}}>
-            <DashboardApp Component={Component} pageProps={pageProps}/>
-        </authContext.Provider>
-    );
-}
+export default NamespaceApp;
