@@ -3,7 +3,6 @@ import {useRouter} from "next/router";
 import {createTriviaQuestion, getTriviaCategories} from "../../../../../../config/apis";
 import {navigate, paths} from "../../../../../../Utils/constants";
 import {Alert, Button, Card, Form, Input, Modal, Select, Switch} from "antd";
-import {InputNumber} from "antd/es";
 
 const TriviaQuestionsAdd = () => {
     const [values, setValues] = useState({is_active: true});
@@ -100,7 +99,7 @@ const TriviaQuestionsAdd = () => {
                         <Input.TextArea/>
                     </Form.Item>
                     <Form.Item name='allowed_time' label='Allowed Time'>
-                        <InputNumber />
+                        <Input />
                     </Form.Item>
                     <Form.Item name='level' label="Level">
                         <Select>
