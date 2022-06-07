@@ -29,6 +29,7 @@ const TriviaQuestionsAdd = () => {
 
 
     function onFinish(values) {
+        values.answers = answers;
         setLoading(true);
         createTriviaQuestion(namespaceId, values).then(res => {
             if (res.status === 200) {
@@ -97,10 +98,26 @@ const TriviaQuestionsAdd = () => {
                     <Form.Item name='questionText' label='Question'>
                         <Input.TextArea/>
                     </Form.Item>
-                    <Form.Item name='category' label='Category'>
+                    <Form.Item name='allowed_time' label='Allowed Time'>
+                        <Input />
+                    </Form.Item>
+                    <Form.Item name='level' label="Level">
+                        <Select>
+                            <Select.Option value={1}>Easy</Select.Option>
+                            <Select.Option value={2}>Medium</Select.Option>
+                            <Select.Option value={3}>Hard</Select.Option>
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name='categoryId' label='Category'>
                         <Select placeholder='Category' allowClear>
                             {categories.map(category => <Select.Option key={category._id}
                                                                        value={category._id}>{category.name}</Select.Option>)}
+                        </Select>
+                    </Form.Item>
+                    <Form.Item name='language' label='Category'>
+                        <Select placeholder="Language">
+                            <Select.Option value={'en'}>English</Select.Option>
+                            <Select.Option value={'fr'}>French</Select.Option>
                         </Select>
                     </Form.Item>
                     <Form.Item label="Actif" name="is_active">
