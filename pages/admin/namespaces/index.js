@@ -1,14 +1,13 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import {listNameSpaces} from "../../../config/apis";
 import {Alert, Avatar, Button, Table} from "antd";
 import {EditOutlined, SearchOutlined} from '@ant-design/icons';
 import {useRouter} from "next/router";
 import {navigate, paths} from "../../../Utils/constants";
+import {useFetchData} from "../../../config/hooks";
 
 const NamespacesList = ({}) => {
-    const [namespaces, setNamespaces] = useState([]);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(true)
+    const {error, message, loading, data: namespaces} = useFetchData(listNameSpaces, []);
     const router = useRouter();
     const colors = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae'];
     const gerRandomColor = () => {
@@ -39,29 +38,13 @@ const NamespacesList = ({}) => {
             render: (_id) => (
                 <>
                     <Button icon={<SearchOutlined/>} type="primary"
-                            onClick={() => navigate(router, paths.VIEW_NAMESPACE, {id:_id})}> Details</Button>
+                            onClick={() => navigate(router, paths.VIEW_NAMESPACE, {id: _id})}> Details</Button>
                     <Button icon={<EditOutlined/>} type="secondary"
-                            onClick={() => navigate(router, paths.EDIT_NAMESPACE, {id:_id})}> Edit</Button>
+                            onClick={() => navigate(router, paths.EDIT_NAMESPACE, {id: _id})}> Edit</Button>
                 </>
             ),
         },
     ];
-
-    useEffect(() => {
-        setLoading(true);
-        listNameSpaces().then(res => {
-            if (res && res.status === 200) {
-                setNamespaces(res.data)
-            } else {
-                setNamespaces([])
-                setError(res.detail)
-            }
-        }).catch(error => {
-            setError(error);
-        }).finally(() => {
-            setLoading(false);
-        })
-    }, []);
 
     return <div className={""}>
         <div className={"mb-4"}>

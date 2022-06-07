@@ -133,17 +133,6 @@ const NamespaceAdd = () => {
                             ))}
                         </Select>
                     </Form.Item>
-                    <Form.Item
-                        label='Users'
-                        name={'system_users'}>
-                        <Select mode={"multiple"} allowClear>
-                            {users.map((user) => (
-                                <Select.Option key={user._id} value={user._id}>
-                                    {user.first_name} {user.last_name}
-                                </Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
                     <Form.Item name='TOS' label='T.O.S'>
                         <Input.TextArea/>
                     </Form.Item>
